@@ -39,15 +39,19 @@ namespace CustomerService.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Customer customer)
         {
+            if (IsModelInvalid()) return BadRequest();
             var aCustomer = _customerService.PostCustomer(customer);
 
             return Ok(aCustomer);
+
         }
 
         // PUT api/<controller>/5
         [HttpPut("{customerId}")]
         public IActionResult Put(int customerId, [FromBody] Customer customer)
         {
+            if (IsModelInvalid()) return BadRequest();
+
             var customerToUpdate = _customerService.UpdateCustomer(customerId, customer);
             if (customer == null) return NotFound();
 
@@ -58,6 +62,12 @@ namespace CustomerService.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            
+        }
+
+        private bool IsModelInvalid()
+        {
+            return !ModelState.IsValid;
         }
     }
 }

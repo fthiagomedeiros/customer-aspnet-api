@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CustomerService.Repositories;
+﻿using CustomerService.Repositories;
 using CustomerService.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,7 +29,9 @@ namespace CustomerService
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddSingleton<ICustomerRepository, CustomerRepositoryImpl>();
+            var connectionString =
+                "Server=xxx.yyy.zzz.rds.amazonaws.com;DataBase=customer;Uid=root;Pwd=dddddd";
+            services.AddDbContext<CustomerLocalDbContext>(options => options.UseMySql(connectionString));
             services.AddScoped<ICustomerService, CustomerServiceImpl>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

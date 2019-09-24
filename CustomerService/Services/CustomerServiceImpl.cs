@@ -9,16 +9,14 @@ namespace CustomerService.Services
 {
     public class CustomerServiceImpl : ICustomerService
     {
-        private readonly ICustomerRepository _customerRepository;
+        private readonly CustomerLocalDbContext _customerRepository;
 
-        public CustomerServiceImpl(ICustomerRepository customerRepository)
+        public CustomerServiceImpl(CustomerLocalDbContext customerRepository)
         {
             _customerRepository = customerRepository;
         }
-        public ICollection<Customer> GetCustomers()
-        {
-            return _customerRepository.GetCustomers();
-        }
+
+        public ICollection<Customer> GetCustomers() => _customerRepository.GetCustomers();
 
         public Customer GetCustomer(int id)
         {
