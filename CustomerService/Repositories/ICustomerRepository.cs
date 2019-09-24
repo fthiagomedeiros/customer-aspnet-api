@@ -10,5 +10,7 @@ namespace CustomerService.Repositories
     {
         Customer GetCustomer(int id);
         Customer PostCustomer(Customer customer);
+        ICollection<Customer> GetCustomers();
+        Customer UpdateCustomer(int customerId, Customer customer);
     }
 }

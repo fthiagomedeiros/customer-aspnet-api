@@ -9,6 +9,6 @@ namespace CustomerService.Domain
 
         [Required]
         [StringLength(120)]
-        public string name { get; set; }
+        public string Name { get; set; }
         }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CustomerService.Domain;
+﻿using CustomerService.Domain;
 using CustomerService.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,9 +18,11 @@ namespace CustomerService.Controllers
 
         // GET: api/<controller>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            var customer = _customerService.GetCustomers();
+
+            return Ok(customer);
         }
 
         // GET api/<controller>/5
@@ -32,8 +30,7 @@ namespace CustomerService.Controllers
         public IActionResult Get(int id)
         {
             var customer = _customerService.GetCustomer(id);
-
-            if (customer == null) NotFound();
+            if (customer == null) return NotFound();
 
             return Ok(customer);
         }
@@ -43,13 +40,18 @@ namespace CustomerService.Controllers
         public IActionResult Post([FromBody] Customer customer)
         {
             var aCustomer = _customerService.PostCustomer(customer);
+
             return Ok(aCustomer);
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPut("{customerId}")]
+        public IActionResult Put(int customerId, [FromBody] Customer customer)
         {
+            var customerToUpdate = _customerService.UpdateCustomer(customerId, customer);
+            if (customer == null) return NotFound();
+
+            return Ok(customerToUpdate);
         }
 
         // DELETE api/<controller>/5
