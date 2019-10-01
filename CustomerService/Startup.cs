@@ -1,4 +1,9 @@
-﻿using CustomerService.Repositories;
+﻿using System.Reflection;
+using AutoMapper;
+using AutoMapper.Configuration;
+using CustomerService.Domain;
+using CustomerService.Mapping;
+using CustomerService.Repositories;
 using CustomerService.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace CustomerService
 {
@@ -22,6 +28,7 @@ namespace CustomerService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -29,10 +36,22 @@ namespace CustomerService
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            var connectionString =
-                "Server=xxx.yyy.zzz.rds.amazonaws.com;DataBase=customer;Uid=root;Pwd=dddddd";
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.CreateMap<Customer, CustomerResource>();
+
+                //mc.AddProfile(new MappingProfile());
+            });
+
+            var mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            //var connectionString =
+            //    "Server=mysql instance.com;DataBase=customer;Uid=root;Pwd=xxxxyyyyy";
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<CustomerLocalDbContext>(options => options.UseMySql(connectionString));
             services.AddScoped<ICustomerService, CustomerServiceImpl>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

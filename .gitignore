@@ -3,7 +3,9 @@
 
 ##files with credentials for database
 /[Cc]ustomerService/appsettings.json
+/[Cc]ustomerService/appsettings.Development.json
 *appsettings.json*
+*appsettings.Development.json*
 
 # User-specific files
 *.suo

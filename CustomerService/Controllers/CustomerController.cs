@@ -1,4 +1,7 @@
-﻿using CustomerService.Domain;
+﻿using System.Collections.Generic;
+using AutoMapper;
+using CustomerService.Domain;
+using CustomerService.Mapping;
 using CustomerService.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +13,12 @@ namespace CustomerService.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerService _customerService;
+        private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService, IMapper mapper)
         {
             _customerService = customerService;
+            _mapper = mapper;
         }
 
         // GET: api/<controller>
@@ -21,8 +26,8 @@ namespace CustomerService.Controllers
         public IActionResult Get()
         {
             var customer = _customerService.GetCustomers();
-
-            return Ok(customer);
+            var response = _mapper.Map<ICollection<Customer>, List<CustomerResource>>(customer);
+            return Ok(response);
         }
 
         // GET api/<controller>/5
@@ -60,10 +65,7 @@ namespace CustomerService.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-            
-        }
+        public void Delete(int id) {}
 
         private bool IsModelInvalid()
         {
